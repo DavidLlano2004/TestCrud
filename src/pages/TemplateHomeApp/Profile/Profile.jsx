@@ -2,6 +2,8 @@ import React from 'react'
 import { ButtonTypeA } from '../../../components/molecules/buttons/ButtonTypeA'
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../../routes/paths'
+import { Icons } from '../../../assets/Icons/IconProvider'
+const { IconEdit } = Icons
 
 export const Profile = () => {
   const navigate = useNavigate()
@@ -15,7 +17,25 @@ export const Profile = () => {
           <img src="" alt="" />
         </div>
       </section>
-      <h1 className='text-center font-semibold text-lg text-primary-principal -translate-y-8'>Julian rodriguez</h1>
+      <div className='relative'>
+        <div className=' absolute right-8 -translate-y-20 '>
+          <ButtonTypeA
+            img={IconEdit}
+            idButton={"btnGoUsers"}
+            text="Editar"
+            bgColor="#201F24"
+            txColor="#F8F5F0"
+            bdWidth="0px"
+            bgHvColor="#35333b"
+            width='w-[200px]'
+            alternativeStyle='mt-5 flex items-center justify-center gap-2'
+            action={() => navigate(paths.ADMIN)}
+            submitBtn={false}
+          />
+
+        </div>
+        <h1 className='text-center font-semibold text-lg text-primary-principal -translate-y-8'>Julian rodriguez</h1>
+      </div>
       <section className=' mt-10 w-[50%] ml-20 grid grid-cols-2 gap-5'>
         <div>
           <h1 className='font-bold text-lg text-primary-principal'>Dirección</h1>
@@ -46,10 +66,10 @@ export const Profile = () => {
         <ButtonTypeA
           idButton={"btnGoUsers"}
           text="Gestión de usuarios"
-          bgColor="#201F24"
+          bgColor="#56535f"
           txColor="#F8F5F0"
           bdWidth="0px"
-          bgHvColor="#35333b"
+          bgHvColor="#8A8895"
           width='w-full'
           alternativeStyle='mt-5'
           action={() => navigate(paths.ADMIN)}

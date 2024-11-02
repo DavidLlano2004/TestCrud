@@ -8,6 +8,7 @@ import IconUsersAsideWhite from './icon_users_white.svg'
 import IconProfileHeader from './icon_profile_header.svg'
 import IconDelete from './icon_delete.svg'
 import IconEdit from './icon_edit.svg'
+import IconAddUsers from './icon_add_users.svg'
 
 
 export const Icons = {
@@ -20,5 +21,7 @@ export const Icons = {
     IconUsersAsideWhite,
     IconProfileHeader,
     IconDelete,
-    IconEdit
+    IconEdit,
+    IconAddUsers
+
 }

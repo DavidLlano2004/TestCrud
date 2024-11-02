@@ -5,7 +5,10 @@ import { TemplateApp } from './pages/TemplateApp/TemplateApp'
 import { Register } from './pages/Register/Register'
 import { TemplateHomeApp } from './pages/TemplateHomeApp/TemplateHomeApp'
 import { Profile } from './pages/TemplateHomeApp/Profile/Profile'
-import { Users } from './pages/TemplateHomeApp/Users/Users'
+import { TemplateUsers } from './pages/TemplateHomeApp/Users/TemplateUsers'
+import { ViewUsers } from './pages/TemplateHomeApp/Users/ViewUsers/ViewUsers'
+import { CreateUsers } from './pages/TemplateHomeApp/Users/CreateUsers/CreateUsers'
+import { EditUsers } from './pages/TemplateHomeApp/Users/EditUsers/EditUsers'
 
 function App() {
 
@@ -18,9 +21,12 @@ function App() {
         </Route>
         <Route path={paths.TEMPLATEHOMEAPP} element={<TemplateHomeApp />}>
           <Route path={paths.PROFILE} element={<Profile />} />
-          <Route path={paths.ADMIN} element={<Users />} />
+          <Route path={paths.ADMIN} element={<TemplateUsers />}>
+            <Route path={paths.VIEWUSERS} element={<ViewUsers />} />
+            <Route path={paths.CREATEUSERS} element={<CreateUsers />} />
+            <Route path={paths.EDITUSERS} element={<EditUsers />} />
 
-          
+          </Route>
         </Route>
 
       </Routes>
