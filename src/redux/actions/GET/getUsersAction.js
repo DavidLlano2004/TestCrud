@@ -6,7 +6,7 @@ export const getUsersAction = () => {
         try {
             const { data: { results } } = await apiDataRandom.get("", {
                 params: {
-                    results: 5,
+                    results: 15,
                 },
             });
             const state = getState();

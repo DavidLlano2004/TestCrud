@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { UserFormApp } from '../../components/organims/form/UserFormApp'
 import { InputSimple } from '../../components/molecules/inputs/InputSimple'
 import { useForm } from 'react-hook-form'
@@ -7,20 +7,43 @@ import { CustomAlert } from '../../components/molecules/customAlert/CustomAlert'
 import { ButtonTypeA } from '../../components/molecules/buttons/ButtonTypeA'
 import { paths } from '../../routes/paths'
 import { useNavigate } from 'react-router-dom'
+import { loginCase } from '../../redux/slices/authSlice/AuthSlice'
+import { useDispatch, useSelector } from 'react-redux'
+
 
 export const Login = () => {
 
     const { register, formState: { errors }, control, handleSubmit } = useForm()
 
+    const { app: { users } } = useSelector(state => state.persistedData)
+
+
     const [textAlert, setTextAlert] = useState(null)
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-    const onsubmitLogin = () => {
-        navigate(paths.TEMPLATEHOMEAPP)
+    const onsubmitLogin = (data) => {
+        const foundUser = users.find(user => user.email === data.email && user.password === data.password);
+
+        if (foundUser) {
+            dispatch(loginCase({
+                email: foundUser.email,
+                name: foundUser.name,
+                is_active: true,
+                user: foundUser.user,
+                rol: foundUser.rol
+            }));
+            navigate(paths.TEMPLATEHOMEAPP)
+
+        } else {
+            setTextAlert("Credenciales incorrectas");
+        }
     }
 
     const onSubmit = handleSubmit(onsubmitLogin)
+
+    console.log(users);
 
 
     return (

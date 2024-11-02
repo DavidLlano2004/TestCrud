@@ -7,11 +7,15 @@ import { paths } from '../../../../routes/paths'
 import { motion } from 'framer-motion'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsersAction } from '../../../../redux/actions/GET/getUsersAction'
+import { CustomSelect } from '../../../../components/molecules/select/SelectSimple'
+import { useForm } from 'react-hook-form'
 const { IconAddUsers } = Icons
 
 export const ViewUsers = () => {
+    const [selectedGender, setSelectedGender] = useState(null);
 
     const { app: { users } } = useSelector(state => state.persistedData)
+    const { control } = useForm()
 
 
     const navigate = useNavigate()
@@ -22,40 +26,61 @@ export const ViewUsers = () => {
         dispatch(getUsersAction());
     };
 
-    
+    const genderOptions = [
+        { value: 'male', label: 'Masculino' },
+        { value: 'female', label: 'Femenino' },
+    ];
 
-    useEffect(() => {
-        dispatch(getUsersAction())
-    }, [])
+    const filteredData = selectedGender
+        ? users.filter(user => user.gender === selectedGender)
+        : users;
+
+
+
+
+    console.log(users)
 
 
 
     return (
         <>
-            <div className='flex gap-5'>
-                <ButtonTypeA
-                    idButton={"btnGoUsers"}
-                    text="Crear usuario"
-                    bgColor="#287C77"
-                    txColor="#F8F5F0"
-                    bdWidth="0px"
-                    bgHvColor="#3a9690"
-                    width='w-[20%]'
-                    alternativeStyle='my-3 flex items-center justify-center gap-3'
-                    img={IconAddUsers}
-                    action={() => navigate(paths.CREATEUSERS)}
-                    submitBtn={false}
-                />
-                <ButtonTypeA
-                    idButton={"btnGoUsers"}
-                    text="Obtener usuarios"
-                    txColor="#201F24"
-                    bdWidth="1px"
-                    width='w-[20%]'
-                    alternativeStyle='my-3 flex items-center justify-center gap-3'
-                    action={() => handleRefreshUsers()}
-                    submitBtn={false}
-                />
+            <div className='flex justify-between'>
+                <div className='xl:flex-row flex-col flex gap-5 w-[80%]'>
+                    <ButtonTypeA
+                        idButton={"btnGoUsers"}
+                        text="Crear usuario"
+                        bgColor="#287C77"
+                        txColor="#F8F5F0"
+                        bdWidth="0px"
+                        bgHvColor="#3a9690"
+                        width='w-[20%]'
+                        alternativeStyle='my-3 flex items-center justify-center gap-3'
+                        img={IconAddUsers}
+                        action={() => navigate(paths.CREATEUSERS)}
+                        submitBtn={false}
+                    />
+                    <ButtonTypeA
+                        idButton={"btnGoUsers"}
+                        text="Obtener usuarios"
+                        txColor="#201F24"
+                        bdWidth="1px"
+                        width='w-[20%]'
+                        alternativeStyle='my-3 flex items-center justify-center gap-3'
+                        action={() => handleRefreshUsers()}
+                        submitBtn={false}
+                    />
+                </div>
+                <div className='mb-7'>
+
+                    <CustomSelect
+                        control={control}
+                        name="genderFilter"
+                        label="Filtrar por Género"
+                        placeholder="Selecciona un género"
+                        staticData={genderOptions}
+                        onChange={(selectedOption) => setSelectedGender(selectedOption ? selectedOption.value : null)}
+                    />
+                </div>
             </div>
 
             <motion.div
@@ -65,9 +90,7 @@ export const ViewUsers = () => {
                 transition={{ type: "spring", stiffness: 700, damping: 20 }}
                 className='bg-white w-full h-[93%] overflow-y-auto rounded-lg'>
                 <TableUsers
-                    dataTable={users}
-                    
-
+                    dataTable={filteredData}
                 />
             </motion.div>
 

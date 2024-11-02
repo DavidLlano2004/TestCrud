@@ -6,13 +6,17 @@ const initialState = {
     is_active: false,
     name: "",
     rol: "",
-    user: ""
+    user: "",
+    users: [] 
 };
 
 const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
+        registerUser: (state, action) => {
+            state.users.push(action.payload);
+        },
         loginCase: (state, action) => {
             state.email = action.payload.email;
             state.name = action.payload.name;
@@ -33,5 +37,5 @@ const authSlice = createSlice({
 });
 
 
-export const { loginCase, signOffCase } = authSlice.actions;
+export const { loginCase, signOffCase , registerUser } = authSlice.actions;
 export default authSlice.reducer;
