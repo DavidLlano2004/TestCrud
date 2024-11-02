@@ -7,9 +7,9 @@ export const TemplateHomeApp = () => {
     return (
         <div className='flex w-full'>
             <Aside />
-            <div className="w-full overflow-x-hidden flex flex-col">
+            <div className="w-full overflow-y-hidden flex flex-col">
                 <Header />
-                <div className=" bg-primary-secondary h-[94dvh] overflow-y-scroll overflow-x-hidden">
+                <div className=" bg-primary-secondary h-[94dvh] overflow-y-hidden overflow-x-hidden">
                     <Outlet/>
                 </div>
             </div>

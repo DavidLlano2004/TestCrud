@@ -7,6 +7,6 @@ export const paths = {
     ADMIN: "/home/admin",
     VIEWUSERS: "/home/admin",
     CREATEUSERS: "/home/admin/create-user",
-    EDITUSERS: "/home/admin/edit-user"
+    EDITUSERS: "/home/admin/edit-user/:id"
 
 }

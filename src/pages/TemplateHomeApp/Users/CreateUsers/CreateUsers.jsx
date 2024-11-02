@@ -1,47 +1,55 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { UserFormApp } from '../../../../components/organims/form/UserFormApp'
 import { InputSimple } from '../../../../components/molecules/inputs/InputSimple'
 import { CustomSelect } from '../../../../components/molecules/select/SelectSimple'
-import { InputController } from '../../../../components/molecules/inputs/InputController'
-import { RulesPassword } from '../../../../components/molecules/rulesPassword/RulesPassword'
 import { ButtonTypeA } from '../../../../components/molecules/buttons/ButtonTypeA'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { arrayRulesPassword } from '../../../../helpers/ValidationPassword'
 import { GoBack } from '../../../../components/molecules/goBack/GoBack'
 import { paths } from '../../../../routes/paths'
+import { generateRandomId } from '../../../../helpers/numbersRandom'
+import { createUserAction } from '../../../../redux/actions/POST/createUserAction'
+import { useDispatch } from 'react-redux'
+import { generateRandomPhoneNumber } from '../../../../helpers/numbersPhone'
 
 export const CreateUsers = () => {
     const defaultValues = {
         email: "",
-        password: "",
         user: "",
-        name: "",
+        name: {
+            first: "",
+        },
         rol: ""
 
     }
-    const { register, formState: { errors }, control, handleSubmit, watch } = useForm({ defaultValues })
+    const { register, formState: { errors }, control, handleSubmit } = useForm({ defaultValues })
 
-    const [textAlert, setTextAlert] = useState(null)
-    const [correctPassword, setCorrectPassword] = useState(false);
-    const [viewPassword, setViewPassword] = useState(false);
 
-    const dataForm = watch();
+
     const navigate = useNavigate()
-    const password = watch("password");
-    const confirmPassword = watch("confirmPassword");
+    const dispatch = useDispatch()
 
-    const onsubmitLogin = () => {
-        console.log('submit login')
-    }
 
-    const onSubmit = handleSubmit(onsubmitLogin)
+    const onSubmit = handleSubmit((data) => {
+        const newUser = {
+            id: generateRandomId(),
+            phone: generateRandomPhoneNumber() , 
+            ...data,
+            rol: data.rol.label
+        };
+        console.log(newUser);
+        debugger
+
+        dispatch(createUserAction(newUser));
+        navigate(paths.VIEWUSERS);
+    });
+
     return (
         <div className='grid place-items-center w-full h-full relative'>
             <div className=' absolute top-0 left-0'>
                 <GoBack actionButton={() => navigate(paths.VIEWUSERS)} />
             </div>
-            <UserFormApp minWidth='min-w-[50%]'>
+            <UserFormApp minWidth='min-w-[50%] ' minHeight="min-h-[400px]">
                 <form onSubmit={onSubmit}>
                     <h1 className='text-primary-principal text-2xl font-semibold '>Crear usuario</h1>
                     <div className='grid grid-cols-2 gap-5 mt-4 '>
@@ -64,7 +72,7 @@ export const CreateUsers = () => {
                             idInputSimple={"inputNameLogin"}
                             errors={errors}
                             label="Nombre"
-                            nameRegister="name"
+                            nameRegister="name.first"
                             register={register}
                             placeholder="Escribe aquí..."
                             validations={{
@@ -77,7 +85,7 @@ export const CreateUsers = () => {
                         />
                         <CustomSelect
                             control={control}
-                            name="representative[1].type_identification"
+                            name="rol"
                             staticData={[{ id: 1, state: true, label: "Administrador" }, { id: 2, state: false, label: "Usuario" }]}
                             rules={{ required: "EL tipo de documento es requerido" }}
                             label={"Rol"}
@@ -104,56 +112,6 @@ export const CreateUsers = () => {
                             inputStyle={"h-[37px] bg-white px-3 py-6 outline-none border-[#BDBDBD] border rounded-md w-full"}
                             hadleOnEnter={onSubmit}
                         />
-                        <InputController
-                            idBtnViewPassword='btnViewPassword'
-                            idInputController={"inputPasswordLogin"}
-                            control={control}
-                            name={"password"}
-                            estrict={false}
-                            rules={{ required: "Campo requerido" }}
-                            label="Contraseña"
-                            placeholder="Ingresa tu contraseña"
-                            type="password"
-                            styleDiv="w-full"
-                            styleLabel="text-primary-principal text-base"
-                            styleInput="h-[37px] bg-white px-3 py-6 outline-none border border-[#BDBDBD] rounded-md w-full"
-                            inputProps={{ onFocus: () => setViewPassword(true) }}
-
-                        />
-
-                        <InputController
-                            idBtnViewPassword='btnViewPasswordConfirm'
-                            idInputController={"inputPasswordConfirmLogin"}
-                            control={control}
-                            name={"confirmPassword"}
-                            estrict={false}
-                            rules={{ required: "Campo requerido" }}
-                            disabled={!correctPassword}
-                            label="Contraseña"
-                            placeholder="Ingresa tu contraseña"
-                            type="password"
-                            styleDiv="w-full"
-                            styleLabel="text-primary-principal text-base"
-                            styleInput="h-[37px] bg-white px-3 py-6 outline-none border border-[#BDBDBD] rounded-md w-full"
-
-                        />
-
-                        {viewPassword && (
-                            <div className=" col-span-2 mt-4 text-left bg-[#EBF7FF] bg-no-repeat bg-padding-box bg-cover bg-center border-2 border-primary-80 rounded-3xs p-4 opacity-100">
-                                <b className="font-bold xl:text-base text-sm  leading-[22px] tracking-[0.07px] text-[#202626] text-left opacity-100">
-                                    Hagamos que tu cuenta sea segura
-                                </b>
-                                <div className="mt-3 mb-3">
-                                    <RulesPassword
-                                        arrayRulesPassword={arrayRulesPassword(password)}
-                                        confirmPassword={confirmPassword}
-                                        password={password}
-                                        setFlagCorrectPassword={setCorrectPassword}
-                                    />
-                                </div>
-                            </div>
-                        )}
-
                         <ButtonTypeA
                             idButton={"btnCreateRepresentatives"}
                             text="Crear"

@@ -3,43 +3,60 @@ import { UserFormApp } from '../../../../components/organims/form/UserFormApp'
 import { GoBack } from '../../../../components/molecules/goBack/GoBack'
 import { InputSimple } from '../../../../components/molecules/inputs/InputSimple'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { CustomSelect } from '../../../../components/molecules/select/SelectSimple'
 import { ButtonTypeA } from '../../../../components/molecules/buttons/ButtonTypeA'
 import { paths } from '../../../../routes/paths'
+import { updateUserAction } from '../../../../redux/actions/PUT/updateInfoUsers'
+import { useDispatch } from 'react-redux'
 
 export const EditUsers = () => {
+
+    const location = useLocation();
+    const user = location.state?.user;
+
     const defaultValues = {
-        email: "",
-        password: "",
-        user: "",
-        name: "",
-        rol: ""
+        user: user?.user || "Sin usuario",
+        phone: user?.phone || "",
+        name: user?.name?.first || "",
+        rol: user?.rol || "",
+    };
 
-    }
-    const { register, formState: { errors }, control, handleSubmit, watch } = useForm({ defaultValues })
+    const { register, formState: { errors }, control, handleSubmit, watch } = useForm({ defaultValues });
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const [textAlert, setTextAlert] = useState(null)
-    const [correctPassword, setCorrectPassword] = useState(false);
-    const [viewPassword, setViewPassword] = useState(false);
+    const dataForm = watch()
+    console.log(dataForm);
 
-    const dataForm = watch();
-    const navigate = useNavigate()
-    const password = watch("password");
-    const confirmPassword = watch("confirmPassword");
 
-    const onsubmitLogin = () => {
-        console.log('submit login')
-    }
+    const onSubmit = (data) => {
+        const updatedData = {
+            user: data.user,
+            phone: data.phone,
+            name: {
+                first: data.name,
+            },
+        };
 
-    const onSubmit = handleSubmit(onsubmitLogin)
+        console.log('Datos a actualizar:', updatedData); // Verifica los datos
+        console.log('Teléfono del usuario:', user.phone);
+        debugger
+
+        dispatch(updateUserAction(user.phone, updatedData));
+        navigate(paths.VIEWUSERS);
+    };
+
+    console.log(user.phone);
+
+
     return (
         <div className='grid place-items-center w-full h-full relative'>
             <div className=' absolute top-0 left-0'>
                 <GoBack actionButton={() => navigate(paths.VIEWUSERS)} />
             </div>
             <UserFormApp minWidth='min-w-[50%]'>
-                <form onSubmit={onSubmit}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <h1 className='text-primary-principal text-2xl font-semibold '>Editar usuario</h1>
                     <div className=' flex flex-col gap-5 mt-6'>
                         <InputSimple
@@ -72,9 +89,24 @@ export const EditUsers = () => {
                             inputStyle={"h-[37px] bg-white px-3 py-6 outline-none border-[#BDBDBD] border rounded-md w-full"}
                             hadleOnEnter={onSubmit}
                         />
+                        <InputSimple
+                            idInputSimple={"inputNameLogin"}
+                            errors={errors}
+                            label="Teléfono"
+                            nameRegister="phone"
+                            register={register}
+                            placeholder="Escribe aquí..."
+                            validations={{
+                                required: "La información es requerido",
+                            }}
+                            styleLabel="text-primary-principal text-base"
+                            width="w-full"
+                            inputStyle={"h-[37px] bg-white px-3 py-6 outline-none border-[#BDBDBD] border rounded-md w-full"}
+                            hadleOnEnter={onSubmit}
+                        />
                         <CustomSelect
                             control={control}
-                            name="representative[1].type_identification"
+                            name="rol"
                             staticData={[{ id: 1, state: true, label: "Administrador" }, { id: 2, state: false, label: "Usuario" }]}
                             rules={{ required: "EL tipo de documento es requerido" }}
                             label={"Rol"}
